@@ -1,0 +1,32 @@
+version: '3.4'
+
+volumes:
+  mysqlCrudApp:
+    
+networks:
+  my-network:
+
+services: 
+  aplicacaocrud:
+    container_name: "appCrudRazor"
+    build: .
+    restart: on-failure
+    depends_on: 
+      - mysqldata
+    ports:
+      - "8080:80"
+      - "8081:443"
+    networks: 
+      - my-network
+  
+  mysqldata:
+    image: mysql
+    container_name: mysql-db-crud
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysqlCrudApp:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - my-network

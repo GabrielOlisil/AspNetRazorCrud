@@ -1,0 +1,95 @@
+@page "{id:int}"
+@model TesteConhecimentos.Pages.Fornecedor.Edit
+
+
+<div class="container-fluid d-flex flex-row-reverse">
+
+    <a asp-page="Index" class="btn btn-primary">Voltar</a>
+</div>
+
+<h1 class="text-center">Editar</h1>
+
+
+@if (Model.Fornecedor is null)
+{
+    <p>Fornecedor não encontrado</p>
+}
+else
+{
+    <form method="post" class="needs-validation" novalidate>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Fornecedor.Id"></label>
+                    <input asp-for="Fornecedor.Id" class="form-control" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Fornecedor.Nome"></label>
+                    <input asp-for="Fornecedor.Nome" class="form-control"/>
+                    <span asp-validation-for="Fornecedor.Nome" class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="form-group">
+                    <label asp-for="Fornecedor.Especialidade"></label>
+                    <select asp-for="Fornecedor.Especialidade" class="form-control">
+                        <option value="" disabled selected>Selecione uma especialidade</option>
+                        <option value="Comércio">Comércio</option>
+                        <option value="Serviço">Serviço</option>
+                        <option value="Indústria">Indústria</option>
+                    </select>
+                    <span asp-validation-for="Fornecedor.Especialidade" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Fornecedor.Cnpj"></label>
+                    <input asp-for="Fornecedor.Cnpj" class="form-control"/>
+                    <span asp-validation-for="Fornecedor.Cnpj" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Fornecedor.Cep"></label>
+                    <input asp-for="Fornecedor.Cep" class="form-control"/>
+                    <span asp-validation-for="Fornecedor.Cep" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        @if (!ModelState.IsValid)
+        {
+            @if (ModelState.ContainsKey("DatabaseError"))
+            {
+                <div class="text-danger">
+                    <p>Houve erros ao adicionar registros no banco de dados.</p>
+                    <ul>
+                        @foreach (var error in ModelState["DatabaseError"].Errors)
+                        {
+                            <pre>@error.ErrorMessage</pre>
+                        }
+                    </ul>
+                </div>
+            }
+        }
+
+
+        <button type="submit" class="btn btn-primary mt-1" asp-page-handler="Save">Salvar</button>
+        <button type="submit" class="btn btn-danger mt-1" asp-page-handler="Delete">Excluir</button>
+    </form>
+}
