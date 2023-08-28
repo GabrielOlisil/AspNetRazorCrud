@@ -26,31 +26,26 @@ public class Edit : PageModel
         try
         {
             Fornecedor = await _dbContext.Fornecedores.FindAsync(id);
-
         }
         catch (MySqlException)
         {
-
             ModelState.AddModelError("DatabaseError", "Ocorreu um erro ao obter dados.");
-
         }
     }
 
     public async Task<IActionResult> OnPostSave()
     {
-        
         if (!CnpjValidator.IsValid(Fornecedor.Cnpj))
         {
-
             ModelState.AddModelError("ValidationError", "Cnpj não é válido");
         }
-        
-        
+
+
         if (!ModelState.IsValid)
         {
             return Page();
         }
-        
+
         try
         {
             var fornecedor = await _dbContext.Fornecedores.FindAsync(Fornecedor.Id);
@@ -62,43 +57,27 @@ public class Edit : PageModel
                 fornecedor.Cnpj = Fornecedor.Cnpj;
                 fornecedor.Nome = Fornecedor.Nome;
 
-                if (fornecedor.Cep != Fornecedor.Cep)
+
+                var cep = Fornecedor.Cep;
+
+                var client = _clientFactory.CreateClient("ViaCep");
+                var response = await client.GetAsync($"{cep}/json");
+
+                if (response.IsSuccessStatusCode)
                 {
-                    var cep = Fornecedor.Cep;
+                    var enderecoResponse = await response.Content.ReadFromJsonAsync<EnderecoApiModel>();
 
-                    var client = _clientFactory.CreateClient("ViaCep");
-                    var response = await client.GetAsync($"{cep}/json");
-                    var partesEndereco = new List<string>();
-                    string endereco = string.Empty;
-                    if (response.IsSuccessStatusCode)
+                    if (enderecoResponse.Erro is not null)
                     {
-                        var enderecoResponse = await response.Content.ReadFromJsonAsync<EnderecoApiModel>();
+                        ModelState.AddModelError("ValidationError", "Cep não existe");
 
-                        if (enderecoResponse.Erro is not null)
-                        {
-                            ModelState.AddModelError("ValidationError", "Cep não existe");
-
-                            return Page();
-                        }
-
-                        if (!String.IsNullOrWhiteSpace(enderecoResponse.Logradouro))
-                            partesEndereco.Add($"Logradouro: {enderecoResponse.Logradouro};");
-
-                        if (!String.IsNullOrWhiteSpace(enderecoResponse.Bairro))
-                            partesEndereco.Add($"Bairro: {enderecoResponse.Bairro};");
-
-                        if (!String.IsNullOrWhiteSpace(enderecoResponse.Localidade))
-                            partesEndereco.Add($"Localidade: {enderecoResponse.Localidade};");
-
-                        if (!String.IsNullOrWhiteSpace(enderecoResponse.Uf))
-                            partesEndereco.Add($"Uf: {enderecoResponse.Uf};");
-
-                        endereco = String.Join(" ", partesEndereco);
+                        return Page();
                     }
-
-                    fornecedor.Cep = Fornecedor.Cep;
-                    fornecedor.Endereco = endereco;
                 }
+
+                fornecedor.Cep = Fornecedor.Cep;
+                fornecedor.Endereco = Fornecedor.Endereco;
+
 
                 await _dbContext.SaveChangesAsync();
 
@@ -116,9 +95,6 @@ public class Edit : PageModel
 
     public async Task<IActionResult> OnPostDelete()
     {
-        
-        
-        
         try
         {
             var fornecedor = await _dbContext.Fornecedores.FindAsync(Fornecedor.Id);
@@ -131,7 +107,7 @@ public class Edit : PageModel
             await _dbContext.SaveChangesAsync();
             return RedirectToPage("/Fornecedor/Index");
         }
-        catch (MySqlException )
+        catch (MySqlException)
         {
             ModelState.AddModelError("DatabaseError", "Ocorreu um erro ao salvar os dados no banco de dados.");
         }

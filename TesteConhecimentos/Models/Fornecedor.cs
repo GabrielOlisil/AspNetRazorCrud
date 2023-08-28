@@ -27,5 +27,7 @@ public class Fornecedor
     [DisplayName("CEP")]
     public string? Cep { get; set; }
 
-    [MaxLength(255)] public string? Endereco { get; set; }
+    [MaxLength(255)]
+    [Required(ErrorMessage = "O Endereço deve ser preenchido")]
+    public string? Endereco { get; set; }
 }

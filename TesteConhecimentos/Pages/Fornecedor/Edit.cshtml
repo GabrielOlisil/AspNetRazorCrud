@@ -66,8 +66,18 @@ else
             <div class="col-md-6">
                 <div class="form-group">
                     <label asp-for="Fornecedor.Cep"></label>
-                    <input asp-for="Fornecedor.Cep" class="form-control"/>
+                    <input asp-for="Fornecedor.Cep" class="form-control" id="Fornecedor_Cep"/>
                     <span asp-validation-for="Fornecedor.Cep" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Fornecedor.Endereco"></label>
+                    <input asp-for="Fornecedor.Endereco" class="form-control" id="Fornecedor_Endereco" readonly />
+                    <span asp-validation-for="Fornecedor.Endereco" class="text-danger" ></span>
                 </div>
             </div>
         </div>
@@ -104,4 +114,46 @@ else
         <button type="submit" class="btn btn-primary mt-1" asp-page-handler="Save">Salvar</button>
         <button type="submit" class="btn btn-danger mt-1" asp-page-handler="Delete">Excluir</button>
     </form>
+}
+
+@section scripts {
+    <script>
+        document.getElementById('Fornecedor_Cep').addEventListener('focusout', async function() {
+            let cep = this.value;
+            if (cep.length === 8) { // Verifica se o CEP tem 8 dígitos
+                let response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                if (response.ok) {
+                    let enderecoJson = await response.json()
+                    if (enderecoJson.erro == true){
+                        document.getElementById("Fornecedor_Endereco").value = "Cep inválido"  
+                        
+                        
+                    } else {
+                         let enderecoString = "";
+                         if (enderecoJson.logradouro){
+                            enderecoString += "Logradouro: " + enderecoJson.logradouro;
+                            enderecoString += "; ";  
+                         } 
+                         
+                         if (enderecoJson.bairro){
+                            enderecoString += "Bairro: " + enderecoJson.bairro;
+                            enderecoString += "; ";  
+                         } 
+                         
+                         if (enderecoJson.localidade){
+                            enderecoString += "Localidade: " + enderecoJson.localidade;
+                            enderecoString += "; ";  
+                         } 
+                         
+                         if (enderecoJson.uf){
+                            enderecoString += "Uf: " + enderecoJson.uf;
+                            enderecoString += "; ";  
+                         } 
+                                             
+                         document.getElementById("Fornecedor_Endereco").value = enderecoString;
+                    }
+                } 
+            }
+        });
+    </script>
 }

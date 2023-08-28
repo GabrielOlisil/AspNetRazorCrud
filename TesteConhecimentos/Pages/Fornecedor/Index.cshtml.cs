@@ -20,8 +20,8 @@ public class Index : PageModel
     {
         try
         {
+            
             Fornecedores = await _context.Fornecedores.ToListAsync();
-
         }
         catch (MySqlException)
         {

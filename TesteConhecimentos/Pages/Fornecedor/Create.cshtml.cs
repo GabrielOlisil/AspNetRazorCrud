@@ -29,11 +29,7 @@ public class Create : PageModel
 
     public async Task<IActionResult> OnPost()
     {
-        if (!CnpjValidator.IsValid(Fornecedor.Cnpj))
-        {
 
-            ModelState.AddModelError("ValidationError", "Cnpj não é válido");
-        }
         
         
         if (!ModelState.IsValid)
@@ -41,13 +37,18 @@ public class Create : PageModel
             return Page();
         }
         
+        if (!CnpjValidator.IsValid(Fornecedor.Cnpj))
+        {
+            ModelState.AddModelError("ValidationError", "Cnpj não é válido");
+            return Page();
+        }
+        
         var cep = Fornecedor.Cep;
 
         var client = _clientFactory.CreateClient("ViaCep");
         var response = await client.GetAsync($"{cep}/json");
-
-        var partesEndereco = new List<string>();
-        string endereco = string.Empty;
+        
+        
         if (response.IsSuccessStatusCode)
         {
             var enderecoResponse = await response.Content.ReadFromJsonAsync<EnderecoApiModel>();
@@ -58,23 +59,6 @@ public class Create : PageModel
 
                 return Page();
             }
-            
-            Console.WriteLine(enderecoResponse.Logradouro is null);
-
-            if (!String.IsNullOrWhiteSpace(enderecoResponse.Logradouro))
-                partesEndereco.Add($"Logradouro: {enderecoResponse.Logradouro};");
-
-            if (!String.IsNullOrWhiteSpace(enderecoResponse.Bairro))
-                partesEndereco.Add($"Bairro: {enderecoResponse.Bairro};");
-
-            if (!String.IsNullOrWhiteSpace(enderecoResponse.Localidade))
-                partesEndereco.Add($"Localidade: {enderecoResponse.Localidade};");
-
-            if (!String.IsNullOrWhiteSpace(enderecoResponse.Uf))
-                partesEndereco.Add($"Uf: {enderecoResponse.Uf};");
-
-            endereco = String.Join(" ", partesEndereco);
-            
         }
         
 
@@ -87,7 +71,7 @@ public class Create : PageModel
                 Cep = Fornecedor.Cep,
                 Nome = Fornecedor.Nome,
                 Cnpj = Fornecedor.Cnpj,
-                Endereco = endereco
+                Endereco = Fornecedor.Endereco
             };
         
             await _dbContext.Fornecedores.AddAsync(fornecedor);
