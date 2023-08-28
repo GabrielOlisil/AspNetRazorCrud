@@ -6,6 +6,7 @@ using TesteConhecimentos.Models;
 using System.Net.Http.Json;
 using System.Runtime.InteropServices.ComTypes;
 using MySqlConnector;
+using TesteConhecimentos.Services;
 
 namespace TesteConhecimentos.Pages.Fornecedor;
 
@@ -28,10 +29,15 @@ public class Create : PageModel
 
     public async Task<IActionResult> OnPost()
     {
+        if (!CnpjValidator.IsValid(Fornecedor.Cnpj))
+        {
 
+            ModelState.AddModelError("ValidationError", "Cnpj não é válido");
+        }
+        
+        
         if (!ModelState.IsValid)
         {
-          
             return Page();
         }
         
@@ -45,6 +51,13 @@ public class Create : PageModel
         if (response.IsSuccessStatusCode)
         {
             var enderecoResponse = await response.Content.ReadFromJsonAsync<EnderecoApiModel>();
+
+            if (enderecoResponse.Erro is not null)
+            {
+                ModelState.AddModelError("ValidationError", "Cep não existe");
+
+                return Page();
+            }
             
             Console.WriteLine(enderecoResponse.Logradouro is null);
 
@@ -63,6 +76,7 @@ public class Create : PageModel
             endereco = String.Join(" ", partesEndereco);
             
         }
+        
 
         try
         {

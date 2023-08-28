@@ -72,6 +72,19 @@
                 </ul>
             </div>
         }
+        
+        @if (ModelState.ContainsKey("ValidationError"))
+        {
+            <div class="text-danger">
+                <p>Houve erros ao adicionar registros no banco de dados.</p>
+                <ul>
+                    @foreach (var error in ModelState["ValidationError"].Errors)
+                    {
+                        <pre>@error.ErrorMessage</pre>
+                    }
+                </ul>
+            </div>
+        }
     }
 
 

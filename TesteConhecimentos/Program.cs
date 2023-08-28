@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 
-const string mysqlConnection = "server=mysqldata;port=3306;user=root;password=root;database=api";
+var mysqlConnection = builder.Configuration.GetConnectionString("MysqlConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(mysqlConnection, ServerVersion.AutoDetect(mysqlConnection)));
 

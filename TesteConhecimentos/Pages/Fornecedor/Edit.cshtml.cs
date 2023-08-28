@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySqlConnector;
 using TesteConhecimentos.Data;
 using TesteConhecimentos.Models;
+using TesteConhecimentos.Services;
 
 namespace TesteConhecimentos.Pages.Fornecedor;
 
@@ -37,6 +38,14 @@ public class Edit : PageModel
 
     public async Task<IActionResult> OnPostSave()
     {
+        
+        if (!CnpjValidator.IsValid(Fornecedor.Cnpj))
+        {
+
+            ModelState.AddModelError("ValidationError", "Cnpj não é válido");
+        }
+        
+        
         if (!ModelState.IsValid)
         {
             return Page();
@@ -65,6 +74,12 @@ public class Edit : PageModel
                     {
                         var enderecoResponse = await response.Content.ReadFromJsonAsync<EnderecoApiModel>();
 
+                        if (enderecoResponse.Erro is not null)
+                        {
+                            ModelState.AddModelError("ValidationError", "Cep não existe");
+
+                            return Page();
+                        }
 
                         if (!String.IsNullOrWhiteSpace(enderecoResponse.Logradouro))
                             partesEndereco.Add($"Logradouro: {enderecoResponse.Logradouro};");

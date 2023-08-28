@@ -1030,11 +1030,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/gabriel/RiderProjects/TesteConhecimentos/TesteConhecimentos/TesteConhecimentos.csproj",
+      "projectUniqueName": "/home/gabriel/RiderProjects/AspNetRazorCrud/TesteConhecimentos/TesteConhecimentos.csproj",
       "projectName": "TesteConhecimentos",
-      "projectPath": "/home/gabriel/RiderProjects/TesteConhecimentos/TesteConhecimentos/TesteConhecimentos.csproj",
+      "projectPath": "/home/gabriel/RiderProjects/AspNetRazorCrud/TesteConhecimentos/TesteConhecimentos.csproj",
       "packagesPath": "/home/gabriel/.nuget/packages/",
-      "outputPath": "/home/gabriel/RiderProjects/TesteConhecimentos/TesteConhecimentos/obj/",
+      "outputPath": "/home/gabriel/RiderProjects/AspNetRazorCrud/TesteConhecimentos/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/gabriel/.nuget/NuGet/NuGet.Config"

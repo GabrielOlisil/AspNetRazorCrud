@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2yofjRDdRFTo7T4azMSw+jw9Kyk1v44VpSa6kuFLHlPXDfqUY1sXbdTZ3Zzr5IfQ5TPDG0MO+03DNlMdEqy75w==",
+  "dgSpecHash": "EVrnAdG4mlZDKFlwiDO3mD51eXJ2on38PZl7+3FZ2ES7DaEytsF0MNM9IzAvaUDRfCjEktWURwHmkJYknSfgSQ==",
   "success": true,
-  "projectFilePath": "/home/gabriel/RiderProjects/TesteConhecimentos/TesteConhecimentos/TesteConhecimentos.csproj",
+  "projectFilePath": "/home/gabriel/RiderProjects/AspNetRazorCrud/TesteConhecimentos/TesteConhecimentos.csproj",
   "expectedPackageFiles": [
     "/home/gabriel/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/gabriel/.nuget/packages/microsoft.entityframeworkcore/7.0.10/microsoft.entityframeworkcore.7.0.10.nupkg.sha512",
